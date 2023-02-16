@@ -1,0 +1,226 @@
+{%load static%}
+<input type=button value="Previous Page" onClick="javascript:history.go(-1);" id="bk">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<style>
+    #maindiv {
+        background-color: white;
+        padding: 5px;
+
+    }
+
+    #secondrow {
+        padding: 0px;
+        background-color: rgb(235, 141, 159);
+    }
+
+
+    .rowh {
+        background-color: rgb(150, 150, 150);
+        font-weight: bold;
+
+
+    }
+
+    .cola {
+
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .colh {
+
+
+        padding: 5px;
+        text-align: center;
+    }
+
+    .coltot {
+        text-align: center;
+        background-color: rgb(255, 255, 255);
+        color: black;
+        font-weight: bolder;
+        border: 1px solid black;
+
+        padding: 10px;
+        font-size: larger;
+    }
+
+
+
+    .coltot:nth-child(2) {
+        text-align: end;
+
+    }
+
+    .rowa:nth-child(even) {
+        background-color: rgb(223, 223, 223);
+        color: black;
+        font-weight: bold;
+    }
+
+    .rowa:nth-child(odd) {
+        background-color: rgb(255, 255, 255);
+        color: black;
+        font-weight: bold;
+    }
+
+    .cola:nth-child(4) {
+        text-align: center;
+    }
+
+    #firstcol {
+        padding: 20px;
+    }
+
+    #secondcol {
+        border-right: 20px solid rgb(165, 165, 165);
+        padding: 20px;
+    }
+
+    @media screen and (max-width: 992px) {
+        #secondcol {
+            border-right: 0px solid rgb(165, 165, 165);
+
+            padding: 10px;
+        }
+    }
+</style>
+<div class="container" id="paper">
+
+    <div class="row" style="padding: 50px;font-weight:500;">
+        <div class="col" style="border: 1px solid black;padding:20px;">
+            <div class="row ">
+                <div class="col d-flex justify-content-end"><a id="print" href="" onclick="pr()">Print</a></div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row"><span style="font-size: 60px;color:red;font-weight: bold;">MGS</span></div>
+                    <div class="row">
+                        <p style="font-weight: bold;"> Subjail Road
+                            <br>
+                            Aluva,683101
+                            <br>
+                            Ernakulam
+                        </p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row"><span style="font-size: 60px;color:black;font-weight:400;">INVOICE</span></div>
+                    <div class="row">
+
+                        <div class="row">
+                            <p>Invoice Number :{{arr.0.invoice_number}}</p>
+                        </div>
+                        <div class="row">
+                            <p>Date : {{arr.0.date_of_purchase}}</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>
+                        Customer : <span id="customer"
+                            style="text-transform:uppercase;">{{arr.0.customer_name}}</span><br>
+                        Phone: <span id="phone" style="text-transform:uppercase;">{{arr.0.phone_number}}</span> <br>
+                    </p>
+                </div>
+                <div class="col">
+                    <p>
+                        Sales_man : <span id="customer" style="text-transform:uppercase;">{{arr.0.sales_man}}</span><br>
+                    </p>
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="row">
+                    <div class="col">
+                        <div class="row rowh">
+                            <div class='colh col-1'>Sln</div>
+                            <div class='colh col-4'>Item</div>
+                            <div class='colh col-1'>Quantity</div>
+                            <div class='colh col-3'>MRP</div>
+                            <div class='colh col-3'>Amount</div>
+
+                        </div>
+
+                        <div id="task">
+                        </div>
+                        <div class="row rowh">
+
+                            <div class='coltot col-9'>Total 
+                            </div>
+                            <div class='coltot col-3' style="text-align: center;">Rs. {{arr.0.total_amount}}</div>
+
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+<div class="row">
+    <div class="col">
+        Payment : {{arr.0.credit_or_not}}
+    </div>
+</div>
+            <div class="row">
+                <div class="col" style="padding-top: 100px;text-align: center;">
+                    If you have any questions about this invoice, please contact
+
+                    mgs agencies :8157983556 .<br>
+
+                    Thank You For Your Business!
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    var k = [
+        {% for i in jn %}
+    '{{i}}',
+        {% endfor %}
+    ]
+    var len = k.length;
+    var newk = [];
+    for (var i = 0; i < len; i++) {
+        newk[i] = k[i].split("||");
+    }
+
+    document.getElementById("task").innerHTML = "";
+    for (var i = 0; i < len - 1; i++) {
+        var slno = i + 1;
+        document.getElementById("task").innerHTML += `
+        
+        <div class='row rowa'>
+    <div class='cola col-1' id='slno'>`+ slno + `</div>
+    <div class='cola col-4' id='itemname'>`+ newk[i][0] + `</div>
+    <div class='cola col-1' id='qt'>`+ newk[i][1] + `</div>
+    <div class='cola col-3' id='price'>`+ newk[i][2] + `</div>
+    <div class='cola col-3' id='price'>`+ newk[i][2] * newk[i][1]  + `</div>
+
+</div>`;
+    }
+</script>
+<script>
+    function pr() {
+        document.getElementById("print").style.display = "none";
+        document.getElementById("bk").style.display = "none";
+        var m = document.getElementById("firstcol")
+        print(m)
+    }
+
+
+
+
+
+
+
+
+</script>

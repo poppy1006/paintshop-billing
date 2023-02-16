@@ -1,0 +1,57 @@
+{% extends 'pages/adminpanel.html' %}
+{%load static%}
+
+{% block HEAD1 %} REPORTS of {%endblock%}
+{% block HEAD2 %}{{bt}}{%endblock%}
+
+{% block body %}
+<style>
+    #secondrow {
+        background-color: white;
+        padding: 50px;
+
+    }
+
+    .form-control {
+        width: 600px;
+    }
+
+    .btn {
+        font-weight: bold;
+        padding: 10px;
+    }
+</style>
+<div class="row">
+    <div class="row bg-dark text-light" style="padding:10px ;font-weight: bolder;text-transform: uppercase;">
+        <div class="col" style="text-align: center;">Invoice Number</div>
+        <div class="col" style="text-align: center;">Customer Name</div>
+        <div class="col" style="text-align: center;">Phone Number</div>
+        <div class="col" style="text-align: center;">Total</div>
+    </div>
+    {% for i in tab %}
+
+    <div class="row" style="padding: 2px;" >
+        <a href="h?invnum={{i.invoice_number}}" class="btn btn-primary">
+        <div class="row">
+            <div class="col">
+                {{i.invoice_number}}
+                </div>
+                <div class="col">
+                    {{i.customer_name}} 
+                </div>
+                <div class="col">
+                    {{i.phone_number}} 
+                </div>
+                <div class="col">
+                    {{i.total_amount}} 
+                </div>
+        </div>
+    </a>
+    </div>
+
+    {% endfor %}
+    
+</div>
+
+
+{%endblock%}

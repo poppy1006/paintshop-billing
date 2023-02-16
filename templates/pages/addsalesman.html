@@ -1,0 +1,45 @@
+{% extends 'pages/adminpanel.html' %}
+{%load static%}
+
+{% block HEAD1 %} ADD {%endblock%}
+{% block HEAD2 %}SALES MAN{%endblock%}
+
+{% block body %}
+<style>
+    #secondrow {
+        background-color: orange;
+        padding: 50px;
+
+    }
+
+    .form-control {
+        width: 600px;
+    }
+
+    .btn {
+        font-weight: bold;
+        padding: 10px;
+    }
+</style>
+<div class="row">
+    <div class="col">
+       <form action="{% url 'SalesmanPost' %}" method="POST">
+        {% csrf_token %}
+        
+        <div class="row" style="padding: 10px;"><input type="text" class="form-control" required placeholder="Full Name"
+                name="name"></div>
+        <div class="row" style="padding: 10px;"><input type="number" class="form-control" required
+                placeholder="Phone Number" name="phone"></div>
+                <div class="row"  style="padding: 10px;">
+                    <button class="btn btn-primary">ADD</button>
+                </div>
+       </form>
+    </div>
+    <div class="col" style="padding:5px ;">
+        <img src="{% static 'images/lucas-kapla-wQLAGv4_OYs-unsplash.jpg' %}" alt="" style="width: 15rem;">
+
+    </div>
+</div>
+
+
+{%endblock%}

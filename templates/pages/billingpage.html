@@ -1,0 +1,479 @@
+{% extends 'pages/adminpanel.html' %}
+{% block HEAD1 %}BILLING{%endblock%}
+{% block HEAD2 %}PAGE{%endblock%}
+{% block body %}
+<style>
+    #maindiv {
+        background-color: white;
+        padding: 5px;
+
+    }
+
+    #secondrow {
+        padding: 0px;
+        background-color: rgb(235, 141, 159);
+    }
+
+
+    .rowh {
+        background-color: whitesmoke;
+        font-weight: bold;
+
+
+    }
+
+    .cola {
+
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+    }
+
+    .colh {
+
+
+        padding: 5px;
+        text-align: center;
+    }
+
+    .coltot {
+        background-color: rgb(51, 51, 51);
+        color: white;
+        font-weight: bolder;
+        border: 1px solid black;
+        text-align: center;
+    }
+
+    .coltot:nth-child(1) {
+        background-color: rgb(0, 0, 0, 0);
+        border: none;
+
+    }
+
+    .coltot:nth-child(2) {
+        text-align: end;
+
+    }
+
+    .rowa:nth-child(even) {
+        background-color: rgb(119, 119, 119);
+        color: white;
+        font-weight: bold;
+    }
+
+    .rowa:nth-child(odd) {
+        background-color: rgb(212, 212, 212);
+        color: black;
+        font-weight: bold;
+    }
+
+    .cola:nth-child(4) {
+        text-align: center;
+    }
+
+    #firstcol {
+        padding: 20px;
+    }
+
+    #secondcol {
+        border-right: 20px solid rgb(165, 165, 165);
+        padding: 20px;
+    }
+
+    @media screen and (max-width: 992px) {
+        #secondcol {
+            border-right: 0px solid rgb(165, 165, 165);
+
+            padding: 10px;
+        }
+    }
+</style>
+<div class="row">
+
+    <div class="col order-2" id="firstcol">
+
+        <form action="{% url 'BillPost' %}" method="POST">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col">
+                    <div class="row rowh">
+                        <div class='colh col-1'>Sln</div>
+                        <div class='colh col-4'>Item name</div>
+                        <div class='colh col-1'>qnt</div>
+                        <div class='colh col-3'>MRP</div>
+                        <div class='colh col-3'>Amount</div>
+
+                    </div>
+                    <div id="task">
+
+                    </div>
+                    <div class="row rowh">
+                        <div class='coltot col-1'></div>
+                        <div class='coltot col-8'><input type="hidden" name='item_name' required id="list_item"
+                                class="form-control" value=""><b>Total : </b>
+                        </div>
+                        <div class='coltot col-3'>Rs.<b id="totprice"></b><input type="hidden" name="total_amount"
+                                id="total_amount"></div>
+                        <input type="text" name="newqt" id="newqt">
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+            <div class="row" style="padding-bottom: 5px;color:white;">
+                <br>
+                Customer :
+                <textarea rows="1" type="text" name="customer_name" required class="form-control"
+                    placeholder="Customer Name"></textarea>
+            </div>
+            <div class="row" style="padding-bottom: 5px;color:white;">Phone Number :
+                <input type="text" name="phone_number" required class="form-control" placeholder="Phone Number">
+            </div>
+            <div class="row" style="padding-bottom: 5px;color:white;">Sales Man :
+                <select name="sales_man" id="" required class="form-control">
+                    {% for sld in salesman %}
+                    <option value="{{sld.name}}">{{sld.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+
+            <div class="row">
+                <div class="col-4" style="color: white;"><label for="cr">Payment : <select name="credit_or_not" id="cr"
+                            style="padding: 5px;">
+                            <option value="Payed">Payed</option>
+                            <option value="Credit">Credit</option>
+                        </select></div>
+            </div>
+            <div class="row gap-1" style="padding: 50px;">
+                <div class="col-12 col-lg-5"><button type="submit" name="save" class="btn btn-success">Save and
+                        Print</button>
+                </div>
+
+                <div class="col-12 col-lg-3"><a href="{% url 'billingpage' %}" name="clear"
+                        class="btn btn-danger">Clear</a></div>
+            </div>
+        </form>
+    </div>
+
+    <div class="col" id="secondcol">
+        <style>
+            .autocomplete {
+                position: relative;
+                display: inline-block;
+            }
+
+            input {
+                border: 1px solid transparent;
+                background-color: #f1f1f1;
+                padding: 10px;
+                font-size: 16px;
+            }
+
+
+
+            input[type=submit] {
+                background-color: DodgerBlue;
+                color: #fff;
+                cursor: pointer;
+            }
+
+            .autocomplete-items {
+                position: absolute;
+                border: 1px solid #d4d4d4;
+                border-bottom: none;
+                border-top: none;
+                z-index: 99;
+                /*position the autocomplete items to be the same width as the container:*/
+                top: 100%;
+                left: 0;
+                right: 0;
+            }
+
+            .autocomplete-items div {
+                padding: 10px;
+                cursor: pointer;
+                background-color: #fff;
+                border-bottom: 1px solid #d4d4d4;
+            }
+
+            /*when hovering an item:*/
+            .autocomplete-items div:hover {
+                background-color: #e9e9e9;
+            }
+
+            /*when navigating through the items using the arrow keys:*/
+            .autocomplete-active {
+                background-color: DodgerBlue !important;
+                color: #ffffff;
+            }
+        </style>
+        <div class="row">
+
+
+            <div class="row">
+                <div class="col">
+
+                    <div class="autocomplete ">
+                        Name:
+                        <input id="myInput" type="text" name="myCountry" placeholder="Item" class="form-control"
+                            style="width: 300px;">
+                    </div>
+                </div>
+                <div class="col">Quantity:
+                    <input id="qt" type="number" value="1" class="form-control" style="width:70px;" name="quantity">
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col" style="padding:5px ;text-align: center;">
+                    <input type="submit" value="Add" id="addlist" style="width:510px;">
+                </div>
+            </div>
+
+            <script>
+                function autocomplete(inp, arr) {
+                    /*the autocomplete function takes two arguments,
+                    the text field element and an array of possible autocompleted values:*/
+                    var currentFocus;
+                    /*execute a function when someone writes in the text field:*/
+                    inp.addEventListener("input", function (e) {
+                        var a, b, i, val = this.value;
+                        /*close any already open lists of autocompleted values*/
+                        closeAllLists();
+                        if (!val) { return false; }
+                        currentFocus = -1;
+                        /*create a DIV element that will contain the items (values):*/
+                        a = document.createElement("DIV");
+                        a.setAttribute("id", this.id + "autocomplete-list");
+                        a.setAttribute("class", "autocomplete-items");
+                        /*append the DIV element as a child of the autocomplete container:*/
+                        this.parentNode.appendChild(a);
+                        /*for each item in the array...*/
+                        for (i = 0; i < arr.length; i++) {
+                            /*check if the item starts with the same letters as the text field value:*/
+                            if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+                                /*create a DIV element for each matching element:*/
+                                b = document.createElement("DIV");
+                                /*make the matching letters bold:*/
+                                b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
+                                b.innerHTML += arr[i].substr(val.length);
+                                /*insert a input field that will hold the current array item's value:*/
+                                b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+                                /*execute a function when someone clicks on the item value (DIV element):*/
+                                b.addEventListener("click", function (e) {
+                                    /*insert the value for the autocomplete text field:*/
+                                    inp.value = this.getElementsByTagName("input")[0].value;
+                                    /*close the list of autocompleted values,
+                                    (or any other open lists of autocompleted values:*/
+                                    closeAllLists();
+                                });
+                                a.appendChild(b);
+                            }
+                        }
+                    });
+                    /*execute a function presses a key on the keyboard:*/
+                    inp.addEventListener("keydown", function (e) {
+                        var x = document.getElementById(this.id + "autocomplete-list");
+                        if (x) x = x.getElementsByTagName("div");
+                        if (e.keyCode == 40) {
+                            /*If the arrow DOWN key is pressed,
+                            increase the currentFocus variable:*/
+                            currentFocus++;
+                            /*and and make the current item more visible:*/
+                            addActive(x);
+                        } else if (e.keyCode == 38) { //up
+                            /*If the arrow UP key is pressed,
+                            decrease the currentFocus variable:*/
+                            currentFocus--;
+                            /*and and make the current item more visible:*/
+                            addActive(x);
+                        } else if (e.keyCode == 13) {
+                            /*If the ENTER key is pressed, prevent the form from being submitted,*/
+                            e.preventDefault();
+                            if (currentFocus > -1) {
+                                /*and simulate a click on the "active" item:*/
+                                if (x) x[currentFocus].click();
+                            }
+                        }
+                    });
+                    function addActive(x) {
+                        /*a function to classify an item as "active":*/
+                        if (!x) return false;
+                        /*start by removing the "active" class on all items:*/
+                        removeActive(x);
+                        if (currentFocus >= x.length) currentFocus = 0;
+                        if (currentFocus < 0) currentFocus = (x.length - 1);
+                        /*add class "autocomplete-active":*/
+                        x[currentFocus].classList.add("autocomplete-active");
+                    }
+                    function removeActive(x) {
+                        /*a function to remove the "active" class from all autocomplete items:*/
+                        for (var i = 0; i < x.length; i++) {
+                            x[i].classList.remove("autocomplete-active");
+                        }
+                    }
+                    function closeAllLists(elmnt) {
+                        /*close all autocomplete lists in the document,
+                        except the one passed as an argument:*/
+                        var x = document.getElementsByClassName("autocomplete-items");
+                        for (var i = 0; i < x.length; i++) {
+                            if (elmnt != x[i] && elmnt != inp) {
+                                x[i].parentNode.removeChild(x[i]);
+                            }
+                        }
+                    }
+                    /*execute a function when someone clicks in the document:*/
+                    document.addEventListener("click", function (e) {
+                        closeAllLists(e.target);
+                    });
+                }
+
+                /*An array containing all the country names in the world:*/
+                var countries = [
+                    {% for i in items %}
+                '{{i.name}}||{{i.price}}||{{i.quantity}}',
+                    {% endfor %}
+              ];
+                /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+                autocomplete(document.getElementById("myInput"), countries);
+
+
+                var l = 0;
+                num = 0;
+                yar = {};
+
+                var total = 0.0;
+                var lst = "";
+                document.querySelector('#addlist').onclick = function () {
+                    if (document.querySelector('#myInput').value.length == 0) {
+                        alert("Kindly Enter Task Name!!!!")
+                    }
+
+                    else {
+
+
+                        var a = document.querySelector('#myInput').value;
+                        document.getElementById("myInput").value = "";
+                        var b = document.querySelector('#qt').value;
+                        document.getElementById('qt').value = '1';
+                        var sp = a.split("||");
+
+                        k = sp[0];
+                        c = sp[1];
+                        d = sp[2];
+
+                       if(typeof yar[k]=='undefined')
+                       {
+                        
+                       }
+                       else
+                       {
+                        if(yar[k] == 0)
+                        {
+                            d=0;
+                        }
+                       }
+
+                        if (d > 0) 
+                        {
+                            if (yar[k])
+                            {
+                               if(yar[k] == 0)
+                               {
+                                alert("understock");
+                               }
+                               else
+                               {
+                                an = yar[k];
+                                kan = an - b;
+                                if (kan < 0)
+                                 {
+                                    alert("understock");
+                                    
+
+                                }
+                               
+                                else 
+                                {
+                                    yar[k] = kan;
+                                    
+                                    l++;
+                                    amount = c * b;
+                                    total = total + amount;
+                                    lst = lst + k + "||" + b + "||" + c + ",";
+
+                                    document.getElementById("totprice").innerHTML = total;
+                                    document.getElementById("total_amount").value = total;
+                                    document.getElementById("newqt").value = kan;
+                                    document.getElementById("list_item").value = lst;
+                                    document.querySelector('#task').innerHTML += `
+                                             <div class='row rowa' id='`+ l + `' >
+                                             <div class='colh col-1'>`+ l + `</div>
+                                         <div class='colh col-4' id='itemname'>`+ k + `</div>
+                                         <div class='colh col-1'>`+ b + `</div>
+                                         <div class='colh col-3'>`+ c + `</div>                 
+                                         <div class='colh col-3'>`+ amount + `</div>                 
+                                     </div>            `;
+
+                                }
+                               }
+                            }
+                            else
+                            {
+                                newqt = d - b;
+
+
+                                if (newqt < 0)
+                                 {
+                                    alert("quantity understock ")
+                                }
+                                else 
+                                {
+                                    yar[k] = newqt;
+                                    
+                                    l++;
+                                    amount = c * b;
+                                    total = total + amount;
+                                    lst = lst + k + "||" + b + "||" + c + ",";
+
+                                    document.getElementById("totprice").innerHTML = total;
+                                    document.getElementById("total_amount").value = total;
+                                    document.getElementById("newqt").value = newqt;
+                                    document.getElementById("list_item").value = lst;
+                                    document.querySelector('#task').innerHTML += `
+                                           <div class='row rowa' id='`+ l + `' >
+                                           <div class='colh col-1'>`+ l + `</div>
+                                       <div class='colh col-4' id='itemname'>`+ k + `</div>
+                                       <div class='colh col-1'>`+ b + `</div>
+                                       <div class='colh col-3'>`+ c + `</div>                 
+                                       <div class='colh col-3'>`+ amount + `</div>                 
+                                   </div>            `;
+                                }
+                            }
+
+                        }
+                        else 
+                        {
+                            alert("Out of Stock");
+                        }
+                        var current_tasks = document.querySelectorAll(".delete");
+                        for (var i = 0; i < current_tasks.length; i++) {
+                            current_tasks[i].onclick = function ()
+                             {
+                                this.parentNode.remove();
+                             }
+                        }
+                    }
+                }
+            </script>
+        </div>
+
+
+    </div>
+</div>
+{%endblock%}

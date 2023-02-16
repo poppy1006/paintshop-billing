@@ -1,0 +1,99 @@
+{% include 'includes/navbar.html'%}
+
+{% block content %}
+<style>
+    #secondrow {
+        padding: 30px;
+        padding-top: 150px;
+        padding-bottom: 150px;
+        background-color: rgb(235, 141, 159);
+    }
+
+    .admbtn {
+        width: 150px;
+        height: 150px;
+        text-align: center;
+        padding-top: 60px;
+    }
+
+    #headp {
+        text-align: center;
+        font-size: 50px;
+        font-weight: bold;
+    }
+
+    #maindiv {
+        background-color: white;
+        padding: 20px;
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    @media screen and (max-width: 992px) {
+        .admbtn {
+            padding-top: 10px;
+            height: auto;
+            text-align: center;
+
+        }
+
+        #secondrow {
+            padding: 0px;
+            padding-top: 100px;
+            padding-bottom: 100px;
+            background-color: rgb(235, 141, 159);
+            text-align: center;
+            gap: 10px;
+        }
+
+        #headp {
+            text-align: center;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+    }
+</style>
+<div class="container">
+    <div id="maindiv">
+        <div>
+            <div class="row">
+                <p id="headp">
+                    <span style="color: red;">{% block HEAD1 %}BILLING{% endblock %} </span>
+                    <span style="color: black;">{%block HEAD2 %}PANEL{%endblock%} </span>
+                </p>
+            </div>
+            <div class="row" id="secondrow">
+                {% block body %}
+
+                <div class="col">
+                    <a href="addproduct" class="btn btn-primary admbtn">
+                        ADD PRODUCT
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="addcategory" class="btn btn-primary admbtn">
+                        ADD CATEGORY
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="billingpage" class="btn btn-primary admbtn">
+                        BILLING PAGE
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="reports" class="btn btn-primary admbtn">
+                        REPORTS
+                    </a>
+                </div>
+                
+                <div class="col">
+                    <a href="addsalesman" class="btn btn-primary admbtn">
+                        ADD SALES MAN </a>
+                </div>
+                {%endblock%}
+            </div>
+        </div>
+    </div>
+</div>
+{%endblock%}
+{% include 'includes/footer.html'%}

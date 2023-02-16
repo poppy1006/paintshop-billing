@@ -1,0 +1,53 @@
+{% extends 'pages/adminpanel.html' %}
+{%load static%}
+
+{% block HEAD1 %} ADD {%endblock%}
+{% block HEAD2 %}PRODUCT{%endblock%}
+
+{% block body %}
+<style>
+    #secondrow {
+        background-color: orange;
+        padding: 50px;
+
+    }
+
+    .form-control {
+        width: 600px;
+    }
+
+    .btn {
+        font-weight: bold;
+        padding: 10px;
+    }
+</style>
+<div class="row">
+    <div class="col">
+        <form action="{% url 'ItemPost'%}" method="POST">
+            {% csrf_token %}
+            <div class="row" style="padding: 5px;">Item Name<input type="text" class="form-control" required
+                    placeholder="ITEM NAME" name="name"></div>
+            <div class="row" style="padding: 5px;">Quanity<input type="number" class="form-control" required
+                    placeholder="QUANTITY" name="quantity" value="1"></div>
+            <div class="row" style="padding: 5px;">Category<select name="category" class="form-control" id="" required>
+                    <option value=""><b>Select Category</b></option>
+                    {% for i in category %}
+                    <option value="{{i.name}}"><b>{{i.name}}</b></option>
+                    {% endfor %}
+                    
+                </select></div>
+            <div class="row" style="padding: 5px;">Price<input type="text" class="form-control" required
+                    placeholder="PRICE" name="price"></div>
+            <div class="row" style="padding: 5px;">
+                <button class="btn btn-primary" type="submit">ADD</button>
+            </div>
+        </form>
+    </div>
+    <div class="col" style="padding:10px;padding-top: 50px;">
+        <img src="{% static 'images/lucas-kapla-wQLAGv4_OYs-unsplash.jpg' %}" alt="" style="width: 20rem;">
+
+    </div>
+</div>
+
+
+{%endblock%}

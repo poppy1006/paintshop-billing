@@ -1,0 +1,44 @@
+{% extends 'pages/adminpanel.html' %}
+{%load static%}
+
+{% block HEAD1 %} ADD {%endblock%}
+{% block HEAD2 %}CATEGORY{%endblock%}
+
+{% block body %}
+<style>
+    #secondrow {
+        background-color: orange;
+        padding: 50px;
+
+    }
+
+    .form-control {
+        width: 600px;
+    }
+
+    .btn {
+        font-weight: bold;
+        padding: 10px;
+    }
+</style>
+<div class="row">
+    <div class="col">
+
+        <form action="{% url 'CategPost' %}" method="POST">
+            {% csrf_token %}
+            <div class="row" style="padding-bottom: 10px;padding-top: 70px;"><input type="text" class="form-control"
+                    required placeholder="CATEGORY" name="category"></div>
+            <div class="row">
+                <button class="btn btn-primary" type="submit" name="">ADD</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col" style="padding: 5px;">
+        <img src="{% static 'images/lucas-kapla-wQLAGv4_OYs-unsplash.jpg' %}" alt="" style="width: 20rem;">
+
+    </div>
+</div>
+
+
+{%endblock%}
